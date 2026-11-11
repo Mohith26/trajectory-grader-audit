@@ -397,7 +397,7 @@ function drawChart(el, ws, sel, showTruth, th, gid) {
   const smooth = (pts, cont = false) => pts.map((p, i) => {
     if (i === 0) return `${cont ? 'L' : 'M'}${p[0].toFixed(1)},${p[1].toFixed(1)}`;
     const p0 = pts[i - 2] || pts[i - 1], p1 = pts[i - 1], p3 = pts[i + 1] || p;
-    const c1 = [p1[0] + (p[0] - p0[0]) / 6, p1[1] + (p[1] - p0[1]) / 6], c2 = [p[0] - (p3[0] - p1[0]) / 6, p[1] - (p3[1] - p1[1]) / 6];
+    const c1 = [p1[0] + (p[0] - p0[0]) / 8, p1[1] + (p[1] - p0[1]) / 8], c2 = [p[0] - (p3[0] - p1[0]) / 8, p[1] - (p3[1] - p1[1]) / 8];
     return `C${c1[0].toFixed(1)},${c1[1].toFixed(1)} ${c2[0].toFixed(1)},${c2[1].toFixed(1)} ${p[0].toFixed(1)},${p[1].toFixed(1)}`;
   }).join('');
   const band = smooth(ws.map((w) => [x(w.week), y(w.hi)])) + smooth(ws.slice().reverse().map((w) => [x(w.week), y(w.lo)]), true) + 'Z';
@@ -409,14 +409,15 @@ function drawChart(el, ws, sel, showTruth, th, gid) {
   const sw = ws[sel - 1];
   const dots = ws.map((w) => `<circle cx="${x(w.week)}" cy="${y(w.theta)}" r="${w.week === sel ? 5.5 : 3.6}" fill="${w.week === sel ? '#9aa1ea' : '#fff'}" stroke="#9aa1ea" stroke-width="1.6" ${w.provisional ? 'stroke-dasharray="2 1.6"' : ''}/>`).join('');
   const tdots = showTruth ? `<path d="${tline}" fill="none" stroke="#efb08c" stroke-width="2"/>` + ws.map((w) => `<circle cx="${x(w.week)}" cy="${y(w.truth)}" r="${w.week === sel ? 5 : 3.2}" fill="${w.week === sel ? '#efb08c' : '#fff'}" stroke="#efb08c" stroke-width="1.6"/>`).join('') : '';
-  const lab = (yy, l, v) => `<text x="${x(sel) + 14}" y="${yy}" fill="#746f68" font-size="12">${l}</text><text x="${x(sel) + 14}" y="${yy + 24}" fill="#34312d" font-size="23" font-weight="500" letter-spacing="-0.9">${v}</text>`;
+  const halo = 'paint-order="stroke" stroke="#fff" stroke-width="5" stroke-linejoin="round"';
+  const lab = (yy, l, v) => `<text x="${x(sel) + 14}" y="${yy}" fill="#746f68" font-size="12" ${halo}>${l}</text><text x="${x(sel) + 14}" y="${yy + 24}" fill="#34312d" font-size="23" font-weight="500" letter-spacing="-0.9" ${halo}>${v}</text>`;
   let ly1 = y(sw.theta) - 16, ly2 = y(sw.truth) - 16;
   if (showTruth && Math.abs(ly1 - ly2) < 48) { if (ly1 <= ly2) ly2 = ly1 + 48; else ly1 = ly2 + 48; }
   const callouts = (sel === ws.length || true) ? lab(Math.min(H - 70, Math.max(18, ly1)), 'Estimate', pct(sw.theta)) + (showTruth ? lab(Math.min(H - 40, Math.max(18, ly2)), 'Truth', pct(sw.truth)) : '') : '';
   el.innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Weekly ranking accuracy estimates with 90% confidence intervals">
     ${shift}${grid}
     <line x1="${m.l}" x2="${m.l + iw}" y1="${y(th)}" y2="${y(th)}" stroke="#c5372f" stroke-dasharray="4 4" stroke-width="1.2"/>
-    <text x="${m.l + iw - 4}" y="${y(th) + 14}" text-anchor="end" fill="#c5372f" font-size="10.5">re-optimize below ${pct(th, 0)}</text>
+    <text x="${m.l + iw - 4}" y="${y(th) + 14}" text-anchor="end" fill="#c5372f" font-size="10.5" paint-order="stroke" stroke="#fff" stroke-width="4">re-optimize below ${pct(th, 0)}</text>
     <defs><linearGradient id="bandg" x1="0" x2="0" y1="0" y2="1"><stop offset="0" stop-color="#abb1ec" stop-opacity=".42"/><stop offset="1" stop-color="#abb1ec" stop-opacity=".2"/></linearGradient></defs><path d="${band}" fill="url(#bandg)"/>
     <line x1="${x(sel)}" x2="${x(sel)}" y1="${m.t}" y2="${m.t + ih}" stroke="#9aa1ea" stroke-width="1.4"/>
     <path d="${line}" fill="none" stroke="#9aa1ea" stroke-width="2.2"/>
