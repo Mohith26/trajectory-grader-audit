@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Graders · General assistant · Trajectory</title>
+<meta name="description" content="Grader audit: active expert labeling and calibrated ranking accuracy for Continual Grading. Unofficial concept demo.">
+<link rel="icon" href="assets/trajectory-logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="modulepreload" href="src/audit.js">
+<link rel="preload" href="data/mtbench_pairs.json" as="fetch" crossorigin>
+<link rel="preload" href="data/results.json" as="fetch" crossorigin>
+</head>
+<body>
+<div class="layout" id="layout">
+  <aside class="sidebar" aria-label="Primary">
+    <button class="agent-switch" type="button" aria-label="Switch agent">
+      <img src="assets/trajectory-logo.svg" alt="" width="18" height="18">
+      <span class="agent-name">General assistant</span>
+      <i data-lucide="chevrons-up-down" class="dim"></i>
+    </button>
+    <button class="search" type="button" id="open-palette" aria-label="Search (Command K)">
+      <i data-lucide="search"></i><span>Search</span><kbd>⌘K</kbd>
+    </button>
+    <nav class="nav">
+      <div class="nav-group">
+        <a class="nav-item" href="#/overview"><i data-lucide="house"></i><span>Overview</span></a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-label">Data</div>
+        <a class="nav-item" href="#/signals"><i data-lucide="waypoints"></i><span>Signals</span></a>
+        <a class="nav-item" href="#/datasets"><i data-lucide="database"></i><span>Datasets</span></a>
+      </div>
+      <div class="nav-group">
+        <div class="nav-label">Models</div>
+        <a class="nav-item" href="#/training"><i data-lucide="activity"></i><span>Training runs</span></a>
+        <a class="nav-item" href="#/evaluations"><i data-lucide="list-checks"></i><span>Evaluations</span></a>
+        <a class="nav-item" href="#/graders" data-nav="graders"><i data-lucide="scale"></i><span>Graders</span></a>
+        <a class="nav-item" href="#/deployments"><i data-lucide="server"></i><span>Deployments</span></a>
+      </div>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="live"><span class="dot"></span>v14 live in production</div>
+      <a class="nav-item" href="#/settings"><i data-lucide="settings"></i><span>Settings</span></a>
+      <div class="user"><span class="avatar">MC</span><span>Maya Chen</span></div>
+      <div class="disclaimer">Unofficial concept demo by Mohith Gajjela. Not affiliated with Trajectory. Public data from LMSYS MT-Bench (CC BY 4.0).</div>
+    </div>
+  </aside>
+  <main class="main" id="main" tabindex="-1">
+    <div class="loading" id="boot">
+      <div class="sk sk-title"></div><div class="sk sk-sub"></div>
+      <div class="sk-row"><div class="sk sk-card"></div><div class="sk sk-card"></div><div class="sk sk-card"></div><div class="sk sk-card"></div></div>
+      <div class="sk sk-chart"></div>
+    </div>
+  </main>
+</div>
+<div class="drawer-scrim" id="scrim" hidden></div>
+<aside class="drawer" id="drawer" aria-hidden="true" aria-label="Pair detail"></aside>
+<div class="palette" id="palette" hidden role="dialog" aria-modal="true" aria-label="Search">
+  <div class="palette-box">
+    <div class="palette-input"><i data-lucide="search"></i><input id="palette-q" placeholder="Search pairs, graders, pages…" aria-label="Search query" autocomplete="off"></div>
+    <div class="palette-list" id="palette-list" role="listbox"></div>
+  </div>
+</div>
+<div class="modal-scrim" id="modal" hidden></div>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"></script>
+<script type="module" src="app.js"></script>
+</body>
+</html>
